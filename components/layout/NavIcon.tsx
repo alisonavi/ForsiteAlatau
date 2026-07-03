@@ -66,6 +66,33 @@ const PATHS: Record<string, JSX.Element> = {
       <path d="M9 4v14M15 6v14" />
     </>
   ),
+  userCheck: (
+    <>
+      <circle cx="9" cy="8" r="3.2" />
+      <path d="M3.5 20a5.5 5.5 0 0111 0" />
+      <path d="M15.5 12.5l1.8 1.8 3.2-3.4" />
+    </>
+  ),
+  balance: (
+    <>
+      <path d="M12 4v16M7 20h10" />
+      <path d="M6 6h12M6 6l-3 6a3 3 0 006 0L6 6zM18 6l-3 6a3 3 0 006 0l-3-6z" />
+    </>
+  ),
+  wallet: (
+    <>
+      <path d="M4 7.5A2.5 2.5 0 016.5 5H18v3" />
+      <rect x="3.5" y="7.5" width="17" height="12" rx="2.5" />
+      <path d="M20.5 12.5H16a2 2 0 000 4h4.5" />
+    </>
+  ),
+  retention: (
+    <>
+      <circle cx="12" cy="8.5" r="3.2" />
+      <path d="M6 20a6 6 0 0110.5-4" />
+      <path d="M18.5 12.5v3h-3M18.6 15.4a3.6 3.6 0 01-6.6 1" />
+    </>
+  ),
 };
 
 export default function NavIcon({

@@ -20,6 +20,10 @@ export const ANALYTICS_NAV: NavItem[] = [
   { label: "Ключевые показатели (KPI)", href: "/analytics/kpi", icon: "target", short: "KPI" },
   { label: "ФОТ и штат", href: "/analytics/payroll", icon: "users", short: "ФОТ / штат" },
   { label: "Налоги по филиалам", href: "/analytics/taxes", icon: "map", short: "Налоги" },
+  { label: "Обзор персонала", href: "/analytics/hr", icon: "userCheck", short: "Персонал" },
+  { label: "Разнообразие и инклюзия", href: "/analytics/inclusion", icon: "balance", short: "Инклюзия" },
+  { label: "Оплата труда", href: "/analytics/compensation", icon: "wallet", short: "Оплата труда" },
+  { label: "Текучесть и удержание", href: "/analytics/retention", icon: "retention", short: "Удержание" },
 ];
 
 export const ALL_NAV = [...PRIMARY_NAV, ...ANALYTICS_NAV];
