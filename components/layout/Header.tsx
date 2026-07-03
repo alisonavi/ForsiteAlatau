@@ -2,13 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 import { cn } from "@/lib/cn";
 
 const LANGS = ["қаз", "рус", "eng"];
 
 export default function Header() {
+  const router = useRouter();
   const [lang, setLang] = useState("рус");
+
+  const logout = () => {
+    document.cookie = "acb_auth=; path=/; max-age=0; samesite=lax";
+    router.replace("/login");
+    router.refresh();
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-bank-border bg-white/85 px-4 backdrop-blur md:px-6">
@@ -49,7 +57,10 @@ export default function Header() {
           ))}
         </div>
 
-        <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-bank-primary to-bank-purple px-3.5 py-2 text-[13px] font-medium text-white shadow-sm transition-all hover:shadow-card-hover hover:brightness-105 active:scale-95">
+        <button
+          onClick={logout}
+          className="flex items-center gap-2 rounded-lg border border-bank-border bg-white px-3.5 py-2 text-[13px] font-medium text-bank-ink shadow-sm transition-all hover:border-bank-red/40 hover:text-bank-red active:scale-95"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -58,12 +69,12 @@ export default function Header() {
             className="h-4 w-4"
           >
             <path
-              d="M10 17l5-5-5-5M15 12H3M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4"
+              d="M14 17l5-5-5-5M19 12H7M10 4H6a2 2 0 00-2 2v12a2 2 0 002 2h4"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
-          <span className="hidden sm:inline">Войти</span>
+          <span className="hidden sm:inline">Выйти</span>
         </button>
       </div>
     </header>
