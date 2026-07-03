@@ -2,13 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/cn";
-
-const LANGS = ["қаз", "рус", "eng"];
 
 export default function LoginPage() {
   const router = useRouter();
-  const [lang, setLang] = useState("рус");
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,24 +20,6 @@ export default function LoginPage() {
 
   return (
     <main className="relative flex min-h-screen items-center justify-center p-4">
-      {/* language switcher — top right */}
-      <div className="absolute right-4 top-4 z-10 flex items-center gap-0.5 rounded-full border border-bank-border bg-white/80 px-1.5 py-1 text-[13px] shadow-sm backdrop-blur">
-        {LANGS.map((l) => (
-          <button
-            key={l}
-            onClick={() => setLang(l)}
-            className={cn(
-              "rounded-full px-2 py-0.5 transition-colors",
-              lang === l
-                ? "bg-bank-primary-soft font-semibold text-bank-primary"
-                : "text-slate-400 hover:text-bank-ink"
-            )}
-          >
-            {l}
-          </button>
-        ))}
-      </div>
-
       <div className="grid w-full max-w-4xl animate-fade-up overflow-hidden rounded-3xl border border-bank-border bg-white shadow-card-hover md:grid-cols-2">
         {/* ---- brand panel ---- */}
         <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-bank-primary via-bank-purple to-bank-red p-8 text-white md:flex">
@@ -100,11 +78,6 @@ export default function LoginPage() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="relative inline-flex w-max items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium backdrop-blur">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" />
-            Данные обновлены · 2024
           </div>
         </div>
 
@@ -190,22 +163,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex cursor-pointer items-center gap-2 text-[13px] text-bank-muted">
-                <input
-                  type="checkbox"
-                  defaultChecked
-                  className="h-4 w-4 rounded border-bank-border accent-bank-primary"
-                />
-                Запомнить меня
-              </label>
-              <button
-                type="button"
-                className="text-[13px] font-medium text-bank-primary transition-colors hover:text-bank-purple"
-              >
-                Забыли пароль?
-              </button>
-            </div>
+            <label className="flex cursor-pointer items-center gap-2 text-[13px] text-bank-muted">
+              <input
+                type="checkbox"
+                defaultChecked
+                className="h-4 w-4 rounded border-bank-border accent-bank-primary"
+              />
+              Запомнить меня
+            </label>
 
             <button
               type="submit"

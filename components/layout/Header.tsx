@@ -1,16 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
-import { cn } from "@/lib/cn";
-
-const LANGS = ["қаз", "рус", "eng"];
 
 export default function Header() {
   const router = useRouter();
-  const [lang, setLang] = useState("рус");
 
   const logout = () => {
     document.cookie = "acb_auth=; path=/; max-age=0; samesite=lax";
@@ -35,28 +30,6 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-3 md:gap-4">
-        <span className="hidden items-center gap-1.5 rounded-full bg-bank-primary-soft px-3 py-1 text-[11px] font-medium text-bank-primary sm:inline-flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-bank-green" />
-          Данные обновлены · 2024
-        </span>
-
-        <div className="flex items-center gap-1 text-[13px]">
-          {LANGS.map((l) => (
-            <button
-              key={l}
-              onClick={() => setLang(l)}
-              className={cn(
-                "rounded px-1.5 py-0.5 transition-colors",
-                lang === l
-                  ? "font-semibold text-bank-ink"
-                  : "text-slate-400 hover:text-bank-ink"
-              )}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-
         <button
           onClick={logout}
           className="flex items-center gap-2 rounded-lg border border-bank-border bg-white px-3.5 py-2 text-[13px] font-medium text-bank-ink shadow-sm transition-all hover:border-bank-red/40 hover:text-bank-red active:scale-95"
