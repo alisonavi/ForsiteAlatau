@@ -1,0 +1,91 @@
+const PATHS: Record<string, JSX.Element> = {
+  home: (
+    <path d="M3 10.5L12 3l9 7.5M5 9.5V20h14V9.5" />
+  ),
+  radar: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <path d="M12 12l6-4" />
+      <circle cx="18" cy="8" r="1.2" fill="currentColor" stroke="none" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M4 20V4M4 20h16" />
+      <path d="M8 16v-4M12 16V8M16 16v-6M20 16v-2" />
+    </>
+  ),
+  layers: (
+    <>
+      <path d="M12 3l9 5-9 5-9-5 9-5z" />
+      <path d="M3 12l9 5 9-5M3 16l9 5 9-5" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
+  phone: (
+    <>
+      <rect x="7" y="3" width="10" height="18" rx="2.5" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  cube: (
+    <>
+      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+      <path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" />
+    </>
+  ),
+  megaphone: (
+    <>
+      <path d="M4 10v4l10 4V6L4 10z" />
+      <path d="M14 8a3 3 0 010 8M7 14v3a2 2 0 004 0" />
+    </>
+  ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" />
+    </>
+  ),
+  users: (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3.5 20a5.5 5.5 0 0111 0" />
+      <path d="M16 5.5a3 3 0 010 5.8M15.5 20a5.5 5.5 0 015-3" />
+    </>
+  ),
+  map: (
+    <>
+      <path d="M9 4L4 6v14l5-2 6 2 5-2V4l-5 2-6-2z" />
+      <path d="M9 4v14M15 6v14" />
+    </>
+  ),
+};
+
+export default function NavIcon({
+  name,
+  className = "h-[18px] w-[18px]",
+}: {
+  name: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      {PATHS[name] ?? PATHS.chart}
+    </svg>
+  );
+}

@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --acb-bg: #f4f6fb;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--acb-bg);
+  color: #0f1b2d;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* thin scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cdd6e5 #eef1f7;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #cdd6e5;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+@layer components {
+  .acb-card {
+    @apply bg-white rounded-2xl border border-bank-border shadow-card;
+  }
+  .acb-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+  }
+  .acb-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* region hover highlight on the KZ map */
+svg path[fill]:hover {
+  filter: brightness(0.94);
+}
