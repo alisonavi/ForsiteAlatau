@@ -50,6 +50,7 @@ export default function ProductsPage() {
         selectedMode: "single",
         itemStyle: { borderColor: "#fff", borderWidth: 2, borderRadius: 4 },
         label: { fontSize: 10, color: INK, formatter: "{b}" },
+        labelLayout: { hideOverlap: true },
         labelLine: { length: 6, length2: 8 },
         emphasis: { focus: "self", scaleSize: 8 },
         select: SELECTED,
@@ -109,7 +110,7 @@ export default function ProductsPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: ["Кредиты", "Депозиты", "Цифровые"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
-    xAxis: catAxis(QUARTERS),
+    xAxis: { ...catAxis(QUARTERS), axisLabel: { ...catAxis(QUARTERS).axisLabel, hideOverlap: true } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtTenge(v) } },
     series: [
       { name: "Кредиты", type: "bar", barGap: "12%", barWidth: "20%", data: salesCredit, itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(PRIMARY, hexA(PRIMARY, 0.55)) }, emphasis: { focus: "series" } },
@@ -138,7 +139,7 @@ export default function ProductsPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: ["Цифровой банк", "Карты", "Кредиты"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { ...catAxis(MONTHS), boundaryGap: false },
+    xAxis: { ...catAxis(MONTHS), boundaryGap: false, axisLabel: { ...catAxis(MONTHS).axisLabel, hideOverlap: true } },
     yAxis: { type: "value", max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtPct(v, 0) } },
     series: [penLine("Цифровой банк", penDigital, PRIMARY), penLine("Карты", penCards, PURPLE), penLine("Кредиты", penCredit, RED)],
   };
@@ -179,7 +180,7 @@ export default function ProductsPage() {
           <Chart option={roseOption} height={340} />
         </ChartCard>
         <ChartCard title="Кросс-продажи (переток клиентов)" description="Путь клиента: зарплатный проект → карта → депозит/кредит → инвестиции">
-          <Chart option={sankeyOption} height={340} />
+          <Chart option={sankeyOption} height={340} mobileHeight={320} />
         </ChartCard>
         <ChartCard title="Продажи по продуктам" description="Поквартальный объём продаж по ключевым продуктам, ₸">
           <Chart option={barOption} height={300} />

@@ -108,6 +108,7 @@ export default function RadarPage() {
           fontSize: 10,
           color: INK,
         },
+        labelLayout: { hideOverlap: true },
         markLine: {
           silent: true,
           symbol: "none",
@@ -169,7 +170,7 @@ export default function RadarPage() {
     grid: grid({ top: 30, right: 20 }),
     legend: { data: ["Факт", "Прогноз"], right: 0, top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => (v == null ? "—" : fmtTenge(v)) },
-    xAxis: { type: "category", data: years, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", data: years, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: { type: "value", splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtTenge(v) } },
     series: [
       { name: "Факт", type: "line", smooth: true, showSymbol: false, connectNulls: false, emphasis: { focus: "series" }, lineStyle: { width: 3, color: PRIMARY }, areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) }, data: hist },
@@ -202,7 +203,7 @@ export default function RadarPage() {
           title="Продуктово-сегментная матрица (BCG)"
           description="По горизонтали — рост рынка, по вертикали — относительная доля; размер круга — объём портфеля"
         >
-          <Chart option={matrixOption} height={420} />
+          <Chart option={matrixOption} height={420} mobileHeight={320} />
         </ChartCard>
 
         <div className="flex flex-col gap-4">

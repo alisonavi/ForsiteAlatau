@@ -94,16 +94,17 @@ export default function RisksPage() {
     },
     xAxis: {
       type: "category", data: PROB, splitArea: { show: true },
-      axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 },
+      axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true },
     },
     yAxis: {
       type: "category", data: IMPACT, splitArea: { show: true },
-      axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 },
+      axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true },
     },
     series: [
       {
         type: "heatmap", data: heatData,
         label: { show: true, fontSize: 11, color: INK },
+        labelLayout: { hideOverlap: true },
         itemStyle: { borderColor: "#fff", borderWidth: 2 },
         cursor: "pointer",
         selectedMode: "single",
@@ -127,7 +128,7 @@ export default function RisksPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: segments.map((s) => s.name), top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: { type: "value", axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtPct(v, 0) } },
     series: segments.map((s) => ({
       name: s.name, type: "line", smooth: true, symbolSize: 6, data: s.data,
@@ -160,7 +161,7 @@ export default function RisksPage() {
     legend: { data: ["Стандартные", "Под наблюдением", "Проблемные"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
     xAxis: { ...moneyAxis },
-    yAxis: { type: "category", data: rows.map((r) => r.name), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: MUTED, fontSize: 11 } },
+    yAxis: { type: "category", data: rows.map((r) => r.name), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     series: [
       { name: "Стандартные", type: "bar", stack: "risk", barWidth: "58%", itemStyle: { color: POSITIVE, borderRadius: [4, 0, 0, 4] }, emphasis: { focus: "series" }, data: rows.map((r) => r.standard) },
       { name: "Под наблюдением", type: "bar", stack: "risk", itemStyle: { color: GOLD }, emphasis: { focus: "series" }, data: rows.map((r) => r.watch) },

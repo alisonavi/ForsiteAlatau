@@ -68,7 +68,7 @@ export default function PayrollPage() {
         },
       },
       xAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtInt(Math.abs(v)) } },
-      yAxis: { ...catAxis(AGE_BANDS), inverse: true },
+      yAxis: { ...catAxis(AGE_BANDS), inverse: true, axisLabel: { ...axisLabel, hideOverlap: true } },
       series: [
         { name: "Мужчины", type: "bar", stack: "pop", data: men.map((v) => -v), barWidth: "62%", emphasis: { focus: "series" as const }, itemStyle: { color: hGradient(PURPLE, hexA(PRIMARY, 0.9)), borderRadius: [4, 0, 0, 4] } },
         { name: "Женщины", type: "bar", stack: "pop", data: women, barWidth: "62%", emphasis: { focus: "series" as const }, itemStyle: { color: hGradient(hexA(PINK, 0.9), PURPLE), borderRadius: [0, 4, 4, 0] } },
@@ -93,7 +93,7 @@ export default function PayrollPage() {
       grid: grid({ top: 34, right: 18 }),
       legend: { data: DEPTS, top: 0, icon: "roundRect", textStyle: { fontSize: 10 }, itemGap: 10 },
       tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
-      xAxis: catAxis(QUARTERS),
+      xAxis: { ...catAxis(QUARTERS), axisLabel: { ...axisLabel, hideOverlap: true } },
       yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtTenge(v) } },
       series: deptSeries,
     };
@@ -118,7 +118,7 @@ export default function PayrollPage() {
           return s;
         },
       },
-      xAxis: { ...catAxis(MONTHS), boundaryGap: false },
+      xAxis: { ...catAxis(MONTHS), boundaryGap: false, axisLabel: { ...axisLabel, hideOverlap: true } },
       yAxis: [
         { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtTenge(v) } },
         { type: "value", position: "right", splitLine: { show: false }, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { ...axisLabel, formatter: (v: number) => fmtInt(v) } },
@@ -144,7 +144,7 @@ export default function PayrollPage() {
       grid: grid({ top: 12, right: 52, left: 8 }),
       tooltip: { ...tooltipBox, trigger: "item", formatter: (p: any) => `${p.name}<br/><b>${fmtInt(p.value)} чел.</b>` },
       xAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtInt(v) } },
-      yAxis: catAxis(disp.map((d) => d.name)),
+      yAxis: { ...catAxis(disp.map((d) => d.name)), axisLabel: { ...axisLabel, hideOverlap: true } },
       series: [
         {
           type: "bar",
@@ -155,6 +155,7 @@ export default function PayrollPage() {
           itemStyle: { color: hGradient(hexA(PRIMARY, 0.9), PURPLE), borderRadius: [0, 4, 4, 0] },
           emphasis: EMPHASIS,
           select: SELECTED,
+          labelLayout: { hideOverlap: true },
           label: { show: true, position: "right", formatter: (p: any) => fmtInt(p.value), fontSize: 11, color: MUTED, fontWeight: 600 },
         },
       ],

@@ -153,6 +153,7 @@ export default function MarketingPage() {
         selectedMode: "single",
         symbolSize: (val: number[]) => Math.max(16, Math.min(58, Math.sqrt(val[2]) / 1400)),
         label: { show: true, formatter: (p: any) => p.data.name, position: "top", fontSize: 10, color: INK },
+        labelLayout: { hideOverlap: true },
         emphasis: EMPHASIS,
         select: SELECTED,
         itemStyle: { opacity: 0.9, borderColor: "#fff", borderWidth: 1 },
@@ -165,7 +166,7 @@ export default function MarketingPage() {
   const barOption = {
     grid: grid({ top: 20, right: 18 }),
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
-    xAxis: { ...catAxis(CHANNELS), axisLabel: { ...axisLabel, fontSize: 10, interval: 0 } },
+    xAxis: { ...catAxis(CHANNELS), axisLabel: { ...axisLabel, fontSize: 10, interval: 0, hideOverlap: true } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtShort(v) } },
     series: [
       {
@@ -177,6 +178,7 @@ export default function MarketingPage() {
         emphasis: EMPHASIS,
         select: SELECTED,
         label: { show: true, position: "top", formatter: (p: any) => fmtShort(p.value), fontSize: 10, color: MUTED },
+        labelLayout: { hideOverlap: true },
       },
     ],
   };
@@ -192,7 +194,7 @@ export default function MarketingPage() {
       data: MONTHS,
       axisTick: { show: false },
       axisLine: { lineStyle: { color: GRID } },
-      axisLabel: { color: MUTED, fontSize: 11 },
+      axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true },
     },
     yAxis: [
       {

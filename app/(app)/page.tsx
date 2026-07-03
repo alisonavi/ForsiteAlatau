@@ -89,7 +89,7 @@ export default function DashboardPage() {
     grid: grid({ top: 30, right: 20 }),
     legend: { data: ["Активы", "Чистая прибыль"], right: 0, top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtTenge(v) },
-    xAxis: { type: "category", data: MONTHS, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", data: MONTHS, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     yAxis: [{ ...moneyAxis }, { ...moneyAxis, position: "right", splitLine: { show: false } }],
     series: [
       {
@@ -125,7 +125,7 @@ export default function DashboardPage() {
     grid: grid({ left: 6, right: 30 }),
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => active.fmt(v) },
     xAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => active.fmt(v) } },
-    yAxis: { type: "category", data: topRegions.map((m) => m.region.short), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    yAxis: { type: "category", data: topRegions.map((m) => m.region.short), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     series: [
       {
         type: "bar",
@@ -137,6 +137,7 @@ export default function DashboardPage() {
         emphasis: EMPHASIS,
         select: SELECTED,
         label: { show: true, position: "right", formatter: (p: any) => active.fmt(p.value), fontSize: 10, color: "#64748B" },
+        labelLayout: { hideOverlap: true },
       },
     ],
   };

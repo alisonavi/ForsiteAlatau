@@ -29,7 +29,7 @@ export default function FinancialPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: ["Доходы", "Расходы", "Чистая прибыль"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => money(v) },
-    xAxis: { type: "category", data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
     series: [
       { name: "Доходы", type: "bar", data: income, barGap: 0, barWidth: "32%", cursor: "pointer", selectedMode: "single", itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) }, emphasis: EMPHASIS, select: SELECTED },
@@ -50,7 +50,7 @@ export default function FinancialPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: ["Процентный", "Комиссионный", "Торговый"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => money(v) },
-    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
     series: [areaSeries("Процентный", pct, PRIMARY), areaSeries("Комиссионный", fee, TEAL), areaSeries("Торговый", trade, INDIGO)],
   };
@@ -104,11 +104,11 @@ export default function FinancialPage() {
   const waterfallOption = {
     grid: grid({ top: 20, right: 18 }),
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, formatter: (ps: any[]) => { const p = ps[1]; return `${p.name}<br/><b>${money(p.value)}</b>`; } },
-    xAxis: { type: "category", data: steps.map((s) => s.name), axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 10, interval: 0 } },
+    xAxis: { type: "category", data: steps.map((s) => s.name), axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 10, interval: 0, hideOverlap: true } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
     series: [
       { name: "placeholder", type: "bar", stack: "t", itemStyle: { color: "transparent" }, emphasis: { itemStyle: { color: "transparent" } }, data: placeholder },
-      { name: "П/У", type: "bar", stack: "t", barWidth: "52%", cursor: "pointer", selectedMode: "single", data: bars, emphasis: EMPHASIS, select: SELECTED, label: { show: true, position: "top", formatter: (p: any) => money(p.value), fontSize: 10, color: "#64748B" } },
+      { name: "П/У", type: "bar", stack: "t", barWidth: "52%", cursor: "pointer", selectedMode: "single", data: bars, emphasis: EMPHASIS, select: SELECTED, label: { show: true, position: "top", formatter: (p: any) => money(p.value), fontSize: 10, color: "#64748B" }, labelLayout: { hideOverlap: true } },
     ],
   };
 

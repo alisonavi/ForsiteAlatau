@@ -35,7 +35,7 @@ export default function TaxesPage() {
     grid: grid({ top: 34, right: 16 }),
     legend: { data: TAX_TYPES.map((t) => t.label), top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
-    xAxis: { type: "category", data: QUARTERS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", data: QUARTERS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     yAxis: { ...moneyAxis },
     series: TAX_TYPES.map((t, ti) => {
       const q = splitTotal(`tax-${t.key}-${year}`, (totalTax / 4) * (0.7 + ti * 0.1), 4);
@@ -53,7 +53,7 @@ export default function TaxesPage() {
     grid: grid({ left: 6, right: 40 }),
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
     xAxis: { ...moneyAxis },
-    yAxis: { type: "category", data: top.map((m) => m.region.short), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    yAxis: { type: "category", data: top.map((m) => m.region.short), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     series: [
       {
         type: "bar", data: top.map((m) => Math.round(getTax(m))), barWidth: "60%",
@@ -61,6 +61,7 @@ export default function TaxesPage() {
         itemStyle: { borderRadius: [0, 6, 6, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) },
         emphasis: EMPHASIS, select: SELECTED,
         label: { show: true, position: "right", formatter: (p: any) => fmtTenge(p.value), fontSize: 10, color: "#64748B" },
+        labelLayout: { hideOverlap: true },
       },
     ],
   };
@@ -71,7 +72,7 @@ export default function TaxesPage() {
   const lineOption = {
     grid: grid({ top: 20, right: 20 }),
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtTenge(v) },
-    xAxis: { type: "category", boundaryGap: false, data: years, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", boundaryGap: false, data: years, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, hideOverlap: true } },
     yAxis: { ...moneyAxis },
     series: [
       {
@@ -111,7 +112,7 @@ export default function TaxesPage() {
           title="Налоги по регионам Казахстана"
           description="Интенсивность цвета — объём налоговых отчислений; выберите регион"
         >
-          <div className="h-[360px]">
+          <div className="h-[300px] md:h-[360px]">
             <BranchesMap
               data={metrics}
               valueLabel="Налоги"

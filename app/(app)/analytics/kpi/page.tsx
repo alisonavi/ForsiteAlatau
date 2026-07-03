@@ -37,7 +37,7 @@ export default function KpiPage() {
     tooltip: { ...tooltipBox, trigger: "item", formatter: (p: any) => `${DIRS[p.dataIndex]} · <b>${fmtPct(p.value)}</b> выполнения` },
     polar: { radius: [26, "80%"] },
     angleAxis: { max: 100, startAngle: 90, axisLine: { show: false }, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false } },
-    radiusAxis: { type: "category", data: DIRS, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: MUTED, fontSize: 11 }, z: 10 },
+    radiusAxis: { type: "category", data: DIRS, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true }, z: 10 },
     series: [
       {
         type: "bar",
@@ -67,7 +67,7 @@ export default function KpiPage() {
     grid: grid({ top: 12, right: 30, bottom: 8 }),
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtPct(v) },
     xAxis: { type: "value", max: 120, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => v + "%" } },
-    yAxis: { type: "category", data: bulletKpis, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    yAxis: { type: "category", data: bulletKpis, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     series: [
       {
         name: "Факт",
@@ -79,6 +79,7 @@ export default function KpiPage() {
         select: SELECTED,
         data: bulletFact.map((v) => ({ value: v, itemStyle: { color: v >= 100 ? POSITIVE : v >= 85 ? GOLD : NEGATIVE, borderRadius: [0, 4, 4, 0] } })),
         label: { show: true, position: "right", formatter: (p: any) => fmtPct(p.value), fontSize: 10, color: MUTED },
+        labelLayout: { hideOverlap: true },
         markLine: {
           silent: true,
           symbol: "none",
@@ -110,7 +111,7 @@ export default function KpiPage() {
     grid: grid({ top: 32, right: 18 }),
     legend: { data: ["Финансовые", "Клиентские", "Процессные"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: { type: "value", min: 50, max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => v + "%" } },
     series: [lineSeries("Финансовые", lineFin, PRIMARY), lineSeries("Клиентские", lineCli, TEAL), lineSeries("Процессные", lineOps, RED)],
   };
@@ -138,7 +139,7 @@ export default function KpiPage() {
     grid: grid({ top: 32, right: 18 }),
     legend: { data: ["Выполнено", "Частично", "Не выполнено"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { type: "category", data: DIRS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", data: DIRS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: { type: "value", max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => v + "%" } },
     series: [
       statusSeries("Выполнено", 0, POSITIVE, [4, 4, 0, 0]),

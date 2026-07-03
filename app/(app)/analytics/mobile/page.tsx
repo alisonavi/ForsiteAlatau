@@ -69,7 +69,7 @@ export default function MobilePage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: ["DAU", "MAU"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtShort(v) },
-    xAxis: { ...catAxis(MONTHS), boundaryGap: false },
+    xAxis: { ...catAxis(MONTHS), boundaryGap: false, axisLabel: { ...catAxis(MONTHS).axisLabel, hideOverlap: true } },
     yAxis: { ...moneyAxis },
     series: [
       {
@@ -93,7 +93,7 @@ export default function MobilePage() {
     return {
       grid: grid({ top: 24, right: 18 }),
       tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => dec1(v) + " ★" },
-      xAxis: catAxis(VERSIONS),
+      xAxis: { ...catAxis(VERSIONS), axisLabel: { ...catAxis(VERSIONS).axisLabel, hideOverlap: true } },
       yAxis: { type: "value", min: 0, max: 5, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
       series: [
         {
@@ -103,6 +103,7 @@ export default function MobilePage() {
           emphasis: EMPHASIS,
           select: SELECTED,
           label: { show: true, position: "top", formatter: (p: any) => dec1(p.value), fontSize: 10, color: MUTED },
+          labelLayout: { hideOverlap: true },
         },
       ],
     };

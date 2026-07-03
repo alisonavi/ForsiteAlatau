@@ -100,7 +100,7 @@ export default function PortfoliosPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: SEG_NAMES, top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { type: "category", data: QUARTERS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", data: QUARTERS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: { type: "value", max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { ...axisLabel, formatter: (v: number) => v + "%" } },
     series: SEG_NAMES.map((name, si) => ({
       name,
@@ -134,7 +134,7 @@ export default function PortfoliosPage() {
           .map((p) => `${p.marker} ${p.seriesName}: <b>${p.seriesName === "NPL 90+" ? fmtPct(p.value) : fmtTenge(p.value)}</b>`)
           .join("<br/>"),
     },
-    xAxis: { type: "category", data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    xAxis: { type: "category", data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, hideOverlap: true } },
     yAxis: [
       { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtShort(v) } },
       { type: "value", position: "right", splitLine: { show: false }, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { ...axisLabel, formatter: (v: number) => fmtPct(v) } },
@@ -237,7 +237,7 @@ export default function PortfoliosPage() {
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-5">
         <ChartCard className="lg:col-span-3" title="Структура портфеля по продуктам" description="Дерево распределения активов и обязательств по продуктам, ₸">
-          <Chart option={treemapOption} height={340} />
+          <Chart option={treemapOption} height={340} mobileHeight={300} />
         </ChartCard>
         <ChartCard className="lg:col-span-2" title="Структура портфеля по сегментам" description="Доли Розницы, МСБ и Корпоратива по кварталам, 100%">
           <Chart option={stackOption} height={340} />
