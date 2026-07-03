@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtMoney, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, PALETTE, PRIMARY, TEAL, GOLD, NEGATIVE, POSITIVE, hexA, vGradient } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, PALETTE, PRIMARY, PURPLE, TEAL, PINK, INDIGO, NEGATIVE, POSITIVE, hexA, vGradient, EMPHASIS, SELECTED } from "@/lib/chart";
 import { trendSeries, splitTotal } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -32,9 +32,9 @@ export default function FinancialPage() {
     xAxis: { type: "category", data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
     series: [
-      { name: "Доходы", type: "bar", data: income, barGap: 0, barWidth: "32%", itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(PRIMARY, 0.9) } },
-      { name: "Расходы", type: "bar", data: expense, barWidth: "32%", itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(GOLD, 0.85) } },
-      { name: "Чистая прибыль", type: "line", smooth: true, symbolSize: 6, data: profit, lineStyle: { width: 3, color: POSITIVE }, itemStyle: { color: POSITIVE } },
+      { name: "Доходы", type: "bar", data: income, barGap: 0, barWidth: "32%", cursor: "pointer", selectedMode: "single", itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) }, emphasis: EMPHASIS, select: SELECTED },
+      { name: "Расходы", type: "bar", data: expense, barWidth: "32%", itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(PINK, 0.85) }, emphasis: { focus: "series" } },
+      { name: "Чистая прибыль", type: "line", smooth: true, symbolSize: 6, data: profit, lineStyle: { width: 3, color: POSITIVE }, itemStyle: { color: POSITIVE }, emphasis: { focus: "series" } },
     ],
   };
 
@@ -52,7 +52,7 @@ export default function FinancialPage() {
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => money(v) },
     xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
-    series: [areaSeries("Процентный", pct, PRIMARY), areaSeries("Комиссионный", fee, TEAL), areaSeries("Торговый", trade, GOLD)],
+    series: [areaSeries("Процентный", pct, PRIMARY), areaSeries("Комиссионный", fee, TEAL), areaSeries("Торговый", trade, INDIGO)],
   };
 
   // ---- 3. Donut: expense structure ----
@@ -64,9 +64,11 @@ export default function FinancialPage() {
     series: [
       {
         type: "pie", radius: ["52%", "76%"], center: ["36%", "50%"], avoidLabelOverlap: true,
+        cursor: "pointer", selectedMode: "single",
         itemStyle: { borderColor: "#fff", borderWidth: 3, borderRadius: 5 },
         label: { show: true, position: "center", formatter: "Расходы\nбанка", fontSize: 12, color: "#64748B", lineHeight: 16 },
-        emphasis: { label: { show: true, fontSize: 13, fontWeight: 700, color: "#0F1B2D", formatter: (p: any) => `${p.percent}%` } },
+        emphasis: { focus: "self", scaleSize: 8, label: { show: true, fontSize: 13, fontWeight: 700, color: "#0F1B2D", formatter: (p: any) => `${p.percent}%` } },
+        select: SELECTED,
         data: donutNames.map((name, i) => ({ name, value: donutParts[i], itemStyle: { color: PALETTE[i] } })),
       },
     ],
@@ -106,7 +108,7 @@ export default function FinancialPage() {
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => money(v) } },
     series: [
       { name: "placeholder", type: "bar", stack: "t", itemStyle: { color: "transparent" }, emphasis: { itemStyle: { color: "transparent" } }, data: placeholder },
-      { name: "П/У", type: "bar", stack: "t", barWidth: "52%", data: bars, label: { show: true, position: "top", formatter: (p: any) => money(p.value), fontSize: 10, color: "#64748B" } },
+      { name: "П/У", type: "bar", stack: "t", barWidth: "52%", cursor: "pointer", selectedMode: "single", data: bars, emphasis: EMPHASIS, select: SELECTED, label: { show: true, position: "top", formatter: (p: any) => money(p.value), fontSize: 10, color: "#64748B" } },
     ],
   };
 
@@ -124,10 +126,10 @@ export default function FinancialPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Операционный доход" value={money(390e9)} delta={9.2} accent={PRIMARY} />
-        <StatTile label="Чистая прибыль" value={money(net)} delta={12.6} accent={POSITIVE} />
-        <StatTile label="ROE" value={fmtPct(18.4)} delta={1.3} accent={TEAL} />
-        <StatTile label="CIR (эффективность)" value={fmtPct(38.5)} delta={-2.1} deltaGood={false} accent={GOLD} />
+        <StatTile label="Операционный доход" count={390e9} format={money} delta={9.2} accent={PRIMARY} />
+        <StatTile label="Чистая прибыль" count={net} format={money} delta={12.6} accent={POSITIVE} />
+        <StatTile label="ROE" count={18.4} format={fmtPct} delta={1.3} accent={TEAL} />
+        <StatTile label="CIR (эффективность)" count={38.5} format={fmtPct} delta={-2.1} deltaGood={false} accent={INDIGO} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

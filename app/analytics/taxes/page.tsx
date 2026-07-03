@@ -9,14 +9,14 @@ import { Select } from "@/components/ui/Controls";
 import BranchesMap from "@/components/map/BranchesMap";
 import { regionMetrics } from "@/lib/regions";
 import { fmtTenge, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, PALETTE, PRIMARY, TEAL, GOLD, hexA, vGradient } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, PRIMARY, PURPLE, RED, PINK, INDIGO, EMPHASIS, SELECTED, hexA, vGradient } from "@/lib/chart";
 import { trendSeries, splitTotal } from "@/lib/rng";
 
 const TAX_TYPES = [
   { key: "kpn", label: "КПН", color: PRIMARY },
-  { key: "nds", label: "НДС", color: TEAL },
-  { key: "ipn", label: "ИПН", color: "#7C5CFC" },
-  { key: "soc", label: "Соцналог", color: GOLD },
+  { key: "nds", label: "НДС", color: PURPLE },
+  { key: "ipn", label: "ИПН", color: RED },
+  { key: "soc", label: "Соцналог", color: PINK },
 ];
 const QUARTERS = ["I кв", "II кв", "III кв", "IV кв"];
 
@@ -57,7 +57,9 @@ export default function TaxesPage() {
     series: [
       {
         type: "bar", data: top.map((m) => Math.round(getTax(m))), barWidth: "60%",
-        itemStyle: { borderRadius: [0, 6, 6, 0], color: vGradient(hexA(PRIMARY, 0.9), GOLD) },
+        cursor: "pointer", selectedMode: "single",
+        itemStyle: { borderRadius: [0, 6, 6, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) },
+        emphasis: EMPHASIS, select: SELECTED,
         label: { show: true, position: "right", formatter: (p: any) => fmtTenge(p.value), fontSize: 10, color: "#64748B" },
       },
     ],
@@ -74,6 +76,7 @@ export default function TaxesPage() {
     series: [
       {
         type: "line", smooth: true, symbolSize: 7, data: dyn,
+        emphasis: { focus: "series" },
         lineStyle: { width: 3, color: PRIMARY }, itemStyle: { color: PRIMARY },
         areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) },
       },
@@ -96,10 +99,10 @@ export default function TaxesPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Всего уплачено налогов" value={fmtTenge(totalTax)} delta={10.4} accent={PRIMARY} />
-        <StatTile label="Эффективная ставка" value={fmtPct(16.8)} delta={-0.6} deltaGood={false} accent={TEAL} />
-        <StatTile label="Крупнейший регион" value={top[top.length - 1]?.region.short ?? "—"} hint={fmtTenge(getTax(top[top.length - 1]))} accent={GOLD} />
-        <StatTile label="Регионов присутствия" value={String(metrics.length)} accent="#7C5CFC" />
+        <StatTile label="Всего уплачено налогов" count={totalTax} format={fmtTenge} delta={10.4} accent={PRIMARY} />
+        <StatTile label="Эффективная ставка" count={16.8} format={(n) => fmtPct(n)} delta={-0.6} deltaGood={false} accent={PURPLE} />
+        <StatTile label="Крупнейший регион" value={top[top.length - 1]?.region.short ?? "—"} hint={fmtTenge(getTax(top[top.length - 1]))} accent={PINK} />
+        <StatTile label="Регионов присутствия" value={String(metrics.length)} accent={INDIGO} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-5">
@@ -116,10 +119,10 @@ export default function TaxesPage() {
               format={fmtTenge}
               selectedIndex={selected}
               onSelectRegion={setSelected}
-              scale={["#FDEFD6", "#B45309"]}
+              scale={["#DDE7FF", "#4C1FD7"]}
             />
           </div>
-          <div className="mt-3 rounded-xl bg-slate-50 p-3 text-xs">
+          <div className="mt-3 rounded-xl bg-bank-primary-soft/40 p-3 text-xs">
             {selectedRegion ? (
               <span className="text-bank-ink">
                 <b>{selectedRegion.region.name}</b> — уплачено налогов{" "}

@@ -32,7 +32,7 @@ export default function BranchesMap({
   selectedIndex,
   onSelectRegion,
   className,
-  scale = ["#E4ECFF", "#1D4ED8"],
+  scale = ["#DDE7FF", "#4C1FD7"],
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(
@@ -52,12 +52,12 @@ export default function BranchesMap({
 
   const colorFor = (i: number) => {
     const m = byIndex.get(i);
-    if (!m) return "#EEF2F8";
+    if (!m) return "#EEF1FB";
     if (selectedIndex != null && selectedIndex !== i) {
-      return "#DBE3EF"; // dim non-selected
+      return "#E9EDFF"; // recede non-selected without going grey/dim
     }
     const t = max > min ? (getValue(m) - min) / (max - min) : 0.5;
-    return lerpColor(scale[0], scale[1], 0.15 + t * 0.85);
+    return lerpColor(scale[0], scale[1], 0.18 + t * 0.82);
   };
 
   const hovered = hover ? byIndex.get(hover.index) : null;

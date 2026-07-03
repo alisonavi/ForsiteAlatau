@@ -10,7 +10,7 @@ import { Segmented, Select } from "@/components/ui/Controls";
 import BranchesMap from "@/components/map/BranchesMap";
 import { regionMetrics, type RegionMetric } from "@/lib/regions";
 import { fmtInt, fmtShort, fmtTenge } from "@/lib/format";
-import { PALETTE, PRIMARY, TEAL, grid, moneyAxis, tooltipBox, vGradient, hexA } from "@/lib/chart";
+import { PRIMARY, PURPLE, EMPHASIS, SELECTED, grid, moneyAxis, tooltipBox, vGradient, hexA } from "@/lib/chart";
 import { trendSeries } from "@/lib/rng";
 
 type MapMetric = "deposits" | "loans" | "clients" | "branches";
@@ -38,19 +38,19 @@ const NAV_CARDS = [
     title: "Финансовые показатели",
     desc: "Доходы, расходы, прибыль, активы и структура баланса",
     href: "/analytics/financial",
-    accent: "#0EA5A4",
+    accent: "#7C3AED",
   },
   {
     title: "Продукты и портфели",
     desc: "Кредиты, депозиты, карты — динамика и структура",
     href: "/analytics/products",
-    accent: "#7C5CFC",
+    accent: "#F23C50",
   },
   {
     title: "Налоги по филиалам",
     desc: "Налоговые отчисления в разрезе регионов и филиалов",
     href: "/analytics/taxes",
-    accent: "#E0A82E",
+    accent: "#EC4899",
   },
 ];
 
@@ -97,8 +97,9 @@ export default function DashboardPage() {
         type: "line",
         smooth: true,
         showSymbol: false,
+        emphasis: { focus: "series" },
         lineStyle: { width: 3, color: PRIMARY },
-        areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) },
+        areaStyle: { color: vGradient(hexA(PRIMARY, 0.3), hexA(PRIMARY, 0)) },
         data: assetsSeries,
       },
       {
@@ -107,7 +108,9 @@ export default function DashboardPage() {
         yAxisIndex: 1,
         smooth: true,
         showSymbol: false,
-        lineStyle: { width: 3, color: TEAL },
+        emphasis: { focus: "series" },
+        lineStyle: { width: 3, color: PURPLE },
+        areaStyle: { color: vGradient(hexA(PURPLE, 0.22), hexA(PURPLE, 0)) },
         data: profitSeries,
       },
     ],
@@ -128,7 +131,11 @@ export default function DashboardPage() {
         type: "bar",
         data: topRegions.map((m) => active.get(m)),
         barWidth: "58%",
-        itemStyle: { borderRadius: [0, 6, 6, 0], color: vGradient(hexA(PRIMARY, 0.85), TEAL) },
+        cursor: "pointer",
+        selectedMode: "single",
+        itemStyle: { borderRadius: [0, 6, 6, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) },
+        emphasis: EMPHASIS,
+        select: SELECTED,
         label: { show: true, position: "right", formatter: (p: any) => active.fmt(p.value), fontSize: 10, color: "#64748B" },
       },
     ],
@@ -155,12 +162,12 @@ export default function DashboardPage() {
 
       {/* KPI tiles */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <StatTile label="Активы" value={fmtTenge(totals.assets)} delta={8.4} accent="#2563EB" />
-        <StatTile label="Депозитный портфель" value={fmtTenge(totals.deposits)} delta={6.1} accent="#0EA5A4" />
-        <StatTile label="Кредитный портфель" value={fmtTenge(totals.loans)} delta={4.7} accent="#7C5CFC" />
-        <StatTile label="Клиенты" value={fmtInt(totals.clients)} delta={3.2} accent="#E0A82E" />
-        <StatTile label="Чистая прибыль" value={fmtTenge(totals.profit)} delta={11.5} accent="#16A34A" />
-        <StatTile label="Филиалы" value={fmtInt(totals.branches)} delta={1.4} accent="#EC5B7C" />
+        <StatTile label="Активы" count={totals.assets} format={fmtTenge} delta={8.4} accent="#2563EB" />
+        <StatTile label="Депозитный портфель" count={totals.deposits} format={fmtTenge} delta={6.1} accent="#7C3AED" />
+        <StatTile label="Кредитный портфель" count={totals.loans} format={fmtTenge} delta={4.7} accent="#F23C50" />
+        <StatTile label="Клиенты" count={totals.clients} format={fmtInt} delta={3.2} accent="#3B82F6" />
+        <StatTile label="Чистая прибыль" count={totals.profit} format={fmtTenge} delta={11.5} accent="#16A34A" />
+        <StatTile label="Филиалы" count={totals.branches} format={fmtInt} delta={1.4} accent="#EC4899" />
       </div>
 
       {/* Map + nav cards */}
@@ -193,7 +200,7 @@ export default function DashboardPage() {
               onSelectRegion={setSelected}
             />
           </div>
-          <div className="mt-3 rounded-xl bg-slate-50 p-3">
+          <div className="mt-3 rounded-xl bg-bank-primary-soft/40 p-3 transition-colors">
             {selectedRegion ? (
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                 <p className="text-sm font-semibold text-bank-ink">{selectedRegion.region.name}</p>
@@ -246,8 +253,17 @@ export default function DashboardPage() {
         <ChartCard title="Динамика активов и прибыли" description="Помесячная динамика за выбранный период">
           <Chart option={trendOption} height={300} />
         </ChartCard>
-        <ChartCard title={`ТОП-регионы · ${active.label}`} description="Крупнейшие регионы по выбранному показателю">
-          <Chart option={topOption} height={300} />
+        <ChartCard title={`ТОП-регионы · ${active.label}`} description="Нажмите на столбец — регион подсветится на карте выше">
+          <Chart
+            option={topOption}
+            height={300}
+            onEvents={{
+              click: (p: any) => {
+                const r = topRegions[p.dataIndex];
+                if (r) setSelected((cur) => (cur === r.region.index ? null : r.region.index));
+              },
+            }}
+          />
         </ChartCard>
       </div>
     </>

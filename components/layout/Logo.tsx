@@ -13,7 +13,7 @@ export default function Logo({
         <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none">
           {/* Alatau — layered mountain peaks */}
           <path d="M4 24L12 10l4 7 3-5 5 12z" fill="#fff" fillOpacity="0.95" />
-          <path d="M4 24l6-5 4 3 5-4 7 6z" fill="#E0A82E" fillOpacity="0.9" />
+          <path d="M4 24l6-5 4 3 5-4 7 6z" fill="#F23C50" fillOpacity="0.92" />
         </svg>
       </span>
       {withText ? (

@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --acb-bg: #f4f6fb;
+  --acb-bg: #ffffff;
+  --acb-blue: #2563eb;
+  --acb-purple: #7c3aed;
+  --acb-red: #f23c50;
 }
 
 html {
@@ -11,23 +14,41 @@ html {
 }
 
 body {
+  position: relative;
   background-color: var(--acb-bg);
   color: #0f1b2d;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* thin scrollbar */
+/* Ambient brand light so a pure-white canvas still feels alive — not flat, not dim. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58rem 40rem at 6% -12%, rgba(37, 99, 235, 0.1), transparent 60%),
+    radial-gradient(52rem 38rem at 102% -4%, rgba(124, 58, 237, 0.1), transparent 60%),
+    radial-gradient(46rem 34rem at 90% 112%, rgba(242, 60, 80, 0.07), transparent 60%);
+}
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* thin, brand-tinted scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #cdd6e5 #eef1f7;
+  scrollbar-color: #c7d2fe #eef1fb;
 }
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #cdd6e5;
+  background: linear-gradient(#93b4fb, #c4b5fd);
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: content-box;
@@ -36,9 +57,18 @@ body {
   background-color: transparent;
 }
 
+::selection {
+  background: rgba(37, 99, 235, 0.18);
+}
+
 @layer components {
   .acb-card {
     @apply bg-white rounded-2xl border border-bank-border shadow-card;
+    transition: box-shadow 0.25s ease, transform 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .acb-card:hover {
+    @apply shadow-card-hover;
   }
   .acb-chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
@@ -49,7 +79,13 @@ body {
   }
 }
 
-/* region hover highlight on the KZ map */
-svg path[fill]:hover {
-  filter: brightness(0.94);
+/* Kazakhstan choropleth: recolor + selection morph smoothly, glow on hover
+   so a click visibly "changes in your eyes". */
+.kz-map path {
+  transition: fill 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease,
+    opacity 0.3s ease;
+  cursor: pointer;
+}
+.kz-map path:hover {
+  filter: brightness(1.06) drop-shadow(0 3px 8px rgba(37, 99, 235, 0.35));
 }

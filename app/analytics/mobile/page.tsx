@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtShort, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, catAxis, PALETTE, PRIMARY, TEAL, GOLD, POSITIVE, GRID, MUTED, INK, hexA, vGradient } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, catAxis, PALETTE, PRIMARY, PURPLE, TEAL, GOLD, POSITIVE, GRID, MUTED, INK, hexA, vGradient, EMPHASIS, SELECTED } from "@/lib/chart";
 import { rand, trendSeries } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -51,8 +51,11 @@ export default function MobilePage() {
       series: [
         {
           type: "funnel", left: "6%", right: "6%", top: 10, bottom: 10, minSize: "24%", gap: 2,
+          cursor: "pointer", selectedMode: "single",
           label: { show: true, position: "inside", color: "#fff", formatter: "{b}\n{c}%", fontSize: 11 },
           itemStyle: { borderColor: "#fff", borderWidth: 1 },
+          emphasis: { focus: "self" },
+          select: { itemStyle: { borderColor: INK, borderWidth: 2, shadowBlur: 18, shadowColor: hexA(PURPLE, 0.5) } },
           data,
         },
       ],
@@ -71,11 +74,13 @@ export default function MobilePage() {
     series: [
       {
         name: "DAU", type: "line", smooth: true, showSymbol: false, data: dauM,
+        emphasis: { focus: "series" },
         lineStyle: { width: 2, color: PRIMARY }, itemStyle: { color: PRIMARY },
         areaStyle: { color: vGradient(hexA(PRIMARY, 0.35), hexA(PRIMARY, 0.02)) },
       },
       {
         name: "MAU", type: "line", smooth: true, showSymbol: false, data: mauM,
+        emphasis: { focus: "series" },
         lineStyle: { width: 3, color: TEAL }, itemStyle: { color: TEAL },
       },
     ],
@@ -93,7 +98,10 @@ export default function MobilePage() {
       series: [
         {
           type: "bar", barWidth: "52%",
+          cursor: "pointer", selectedMode: "single",
           data: ratings.map((v, i) => ({ value: v, itemStyle: { color: PALETTE[i], borderRadius: [4, 4, 0, 0] } })),
+          emphasis: EMPHASIS,
+          select: SELECTED,
           label: { show: true, position: "top", formatter: (p: any) => dec1(p.value), fontSize: 10, color: MUTED },
         },
       ],
@@ -114,8 +122,11 @@ export default function MobilePage() {
       series: [
         {
           type: "pie", radius: "72%", center: ["38%", "50%"],
+          cursor: "pointer", selectedMode: "single",
           itemStyle: { borderColor: "#fff", borderWidth: 2 },
           label: { show: true, formatter: (p: any) => `${p.name}\n${p.percent}%`, fontSize: 11, color: INK },
+          emphasis: { focus: "self", scaleSize: 8 },
+          select: { itemStyle: { borderColor: INK, borderWidth: 2, shadowBlur: 18, shadowColor: hexA(PURPLE, 0.5) } },
           data: names.map((name, i) => ({ name, value: vals[i], itemStyle: { color: PALETTE[i] } })),
         },
       ],
@@ -136,9 +147,9 @@ export default function MobilePage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="MAU (месячная аудитория)" value={fmtShort(kpi.mau)} delta={11.4} accent={PRIMARY} />
-        <StatTile label="DAU (дневная аудитория)" value={fmtShort(kpi.dau)} delta={8.7} accent={TEAL} />
-        <StatTile label="Stickiness (DAU/MAU)" value={fmtPct(kpi.stickPct, 0)} delta={2.3} accent={POSITIVE} hint="Липкость аудитории" />
+        <StatTile label="MAU (месячная аудитория)" count={kpi.mau} format={fmtShort} delta={11.4} accent={PRIMARY} />
+        <StatTile label="DAU (дневная аудитория)" count={kpi.dau} format={fmtShort} delta={8.7} accent={TEAL} />
+        <StatTile label="Stickiness (DAU/MAU)" count={kpi.stickPct} format={(n) => fmtPct(n, 0)} delta={2.3} accent={POSITIVE} hint="Липкость аудитории" />
         <StatTile label="Оценка в сторах" value={dec1(kpi.rating) + " ★"} delta={0.4} accent={GOLD} hint="App Store и Google Play" />
       </div>
 

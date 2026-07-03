@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtInt, fmtTenge, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, catAxis, axisLabel, PALETTE, PRIMARY, TEAL, GOLD, MUTED, hexA } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, catAxis, axisLabel, PALETTE, PRIMARY, PURPLE, RED, PINK, MUTED, hexA, vGradient, hGradient, EMPHASIS, SELECTED } from "@/lib/chart";
 import { rand, trendSeries } from "@/lib/rng";
 import { regionMetrics } from "@/lib/regions";
 
@@ -70,8 +70,8 @@ export default function PayrollPage() {
       xAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtInt(Math.abs(v)) } },
       yAxis: { ...catAxis(AGE_BANDS), inverse: true },
       series: [
-        { name: "Мужчины", type: "bar", stack: "pop", data: men.map((v) => -v), barWidth: "62%", itemStyle: { color: hexA(PRIMARY, 0.9), borderRadius: [4, 0, 0, 4] } },
-        { name: "Женщины", type: "bar", stack: "pop", data: women, barWidth: "62%", itemStyle: { color: hexA(PALETTE[4], 0.9), borderRadius: [0, 4, 4, 0] } },
+        { name: "Мужчины", type: "bar", stack: "pop", data: men.map((v) => -v), barWidth: "62%", emphasis: { focus: "series" as const }, itemStyle: { color: hGradient(PURPLE, hexA(PRIMARY, 0.9)), borderRadius: [4, 0, 0, 4] } },
+        { name: "Женщины", type: "bar", stack: "pop", data: women, barWidth: "62%", emphasis: { focus: "series" as const }, itemStyle: { color: hGradient(hexA(PINK, 0.9), PURPLE), borderRadius: [0, 4, 4, 0] } },
       ],
     };
   }, [seed, kpi.headcount]);
@@ -124,8 +124,8 @@ export default function PayrollPage() {
         { type: "value", position: "right", splitLine: { show: false }, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { ...axisLabel, formatter: (v: number) => fmtInt(v) } },
       ],
       series: [
-        { name: "ФОТ", type: "line", smooth: true, showSymbol: false, yAxisIndex: 0, lineStyle: { width: 3, color: PRIMARY }, areaStyle: { color: hexA(PRIMARY, 0.12) }, itemStyle: { color: PRIMARY }, data: fotMonthly },
-        { name: "Численность", type: "line", smooth: true, symbolSize: 6, yAxisIndex: 1, lineStyle: { width: 3, color: GOLD }, itemStyle: { color: GOLD }, data: headMonthly.map((v) => Math.round(v)) },
+        { name: "ФОТ", type: "line", smooth: true, showSymbol: false, yAxisIndex: 0, emphasis: { focus: "series" as const }, lineStyle: { width: 3, color: PRIMARY }, areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) }, itemStyle: { color: PRIMARY }, data: fotMonthly },
+        { name: "Численность", type: "line", smooth: true, symbolSize: 6, yAxisIndex: 1, emphasis: { focus: "series" as const }, lineStyle: { width: 3, color: PURPLE }, itemStyle: { color: PURPLE }, data: headMonthly.map((v) => Math.round(v)) },
       ],
     };
   }, [seed, kpi.fotYear, kpi.headcount]);
@@ -149,8 +149,12 @@ export default function PayrollPage() {
         {
           type: "bar",
           barWidth: "58%",
+          cursor: "pointer",
+          selectedMode: "single" as const,
           data: disp.map((d) => d.value),
-          itemStyle: { color: hexA(TEAL, 0.9), borderRadius: [0, 4, 4, 0] },
+          itemStyle: { color: hGradient(hexA(PRIMARY, 0.9), PURPLE), borderRadius: [0, 4, 4, 0] },
+          emphasis: EMPHASIS,
+          select: SELECTED,
           label: { show: true, position: "right", formatter: (p: any) => fmtInt(p.value), fontSize: 11, color: MUTED, fontWeight: 600 },
         },
       ],
@@ -171,10 +175,10 @@ export default function PayrollPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="ФОТ в год" value={fmtTenge(kpi.fotYear)} delta={kpi.dFot} accent={PRIMARY} hint="за год" />
-        <StatTile label="Средняя зарплата" value={fmtTenge(kpi.avgSalary)} delta={kpi.dSal} accent={TEAL} hint="₸ в месяц" />
-        <StatTile label="Численность" value={fmtInt(kpi.headcount)} delta={kpi.dHead} accent={GOLD} hint="сотрудников" />
-        <StatTile label="Текучесть кадров" value={fmtPct(kpi.turnover)} delta={kpi.dTurn} deltaGood={kpi.dTurn <= 0} accent={PALETTE[4]} hint="за год" />
+        <StatTile label="ФОТ в год" count={kpi.fotYear} format={fmtTenge} delta={kpi.dFot} accent={PRIMARY} hint="за год" />
+        <StatTile label="Средняя зарплата" count={kpi.avgSalary} format={fmtTenge} delta={kpi.dSal} accent={PURPLE} hint="₸ в месяц" />
+        <StatTile label="Численность" count={kpi.headcount} format={fmtInt} delta={kpi.dHead} accent={RED} hint="сотрудников" />
+        <StatTile label="Текучесть кадров" count={kpi.turnover} format={fmtPct} delta={kpi.dTurn} deltaGood={kpi.dTurn <= 0} accent={PINK} hint="за год" />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

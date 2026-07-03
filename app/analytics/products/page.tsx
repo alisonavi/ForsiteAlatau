@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtInt, fmtPct, fmtTenge } from "@/lib/format";
-import { PALETTE, PRIMARY, TEAL, GOLD, POSITIVE, INK, MUTED, GRID, grid, tooltipBox, moneyAxis, catAxis, hexA } from "@/lib/chart";
+import { PALETTE, PRIMARY, PURPLE, RED, POSITIVE, INK, MUTED, GRID, SELECTED, grid, tooltipBox, moneyAxis, catAxis, vGradient, hexA } from "@/lib/chart";
 import { rand, splitTotal, trendSeries } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -34,8 +34,6 @@ export default function ProductsPage() {
     };
   }, [key]);
 
-  const perClientStr = kpi.perClient.toLocaleString("ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
   // ---- 1. Rose / Nightingale: продуктовый микс ----
   const mixNames = ["Дебетовые карты", "Кредитные карты", "Ипотека", "Депозиты", "Автокредиты", "Инвестиции"];
   const mixVals = useMemo(() => splitTotal("prod-mix-" + key, 480, 6), [key]);
@@ -48,9 +46,13 @@ export default function ProductsPage() {
         roseType: "area",
         radius: ["18%", "78%"],
         center: ["50%", "46%"],
+        cursor: "pointer",
+        selectedMode: "single",
         itemStyle: { borderColor: "#fff", borderWidth: 2, borderRadius: 4 },
         label: { fontSize: 10, color: INK, formatter: "{b}" },
         labelLine: { length: 6, length2: 8 },
+        emphasis: { focus: "self", scaleSize: 8 },
+        select: SELECTED,
         data: mixNames.map((name, i) => ({ name, value: mixVals[i], itemStyle: { color: PALETTE[i] } })),
       },
     ],
@@ -110,9 +112,9 @@ export default function ProductsPage() {
     xAxis: catAxis(QUARTERS),
     yAxis: { ...moneyAxis, axisLabel: { ...moneyAxis.axisLabel, formatter: (v: number) => fmtTenge(v) } },
     series: [
-      { name: "Кредиты", type: "bar", barGap: "12%", barWidth: "20%", data: salesCredit, itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(PRIMARY, 0.92) } },
-      { name: "Депозиты", type: "bar", barWidth: "20%", data: salesDepo, itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(TEAL, 0.9) } },
-      { name: "Цифровые", type: "bar", barWidth: "20%", data: salesDigi, itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(GOLD, 0.9) } },
+      { name: "Кредиты", type: "bar", barGap: "12%", barWidth: "20%", data: salesCredit, itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(PRIMARY, hexA(PRIMARY, 0.55)) }, emphasis: { focus: "series" } },
+      { name: "Депозиты", type: "bar", barWidth: "20%", data: salesDepo, itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(PURPLE, hexA(PURPLE, 0.55)) }, emphasis: { focus: "series" } },
+      { name: "Цифровые", type: "bar", barWidth: "20%", data: salesDigi, itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(RED, hexA(RED, 0.55)) }, emphasis: { focus: "series" } },
     ],
   };
 
@@ -129,7 +131,7 @@ export default function ProductsPage() {
     data: data.map((v) => Math.min(96, v)),
     lineStyle: { width: 3, color },
     itemStyle: { color },
-    areaStyle: { color: hexA(color, 0.08) },
+    areaStyle: { color: vGradient(hexA(color, 0.24), hexA(color, 0)) },
     emphasis: { focus: "series" as const },
   });
   const lineOption = {
@@ -138,7 +140,7 @@ export default function ProductsPage() {
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
     xAxis: { ...catAxis(MONTHS), boundaryGap: false },
     yAxis: { type: "value", max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtPct(v, 0) } },
-    series: [penLine("Цифровой банк", penDigital, PRIMARY), penLine("Карты", penCards, TEAL), penLine("Кредиты", penCredit, GOLD)],
+    series: [penLine("Цифровой банк", penDigital, PRIMARY), penLine("Карты", penCards, PURPLE), penLine("Кредиты", penCredit, RED)],
   };
 
   return (
@@ -166,10 +168,10 @@ export default function ProductsPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Активных продуктов на клиента" value={perClientStr} delta={kpi.dPerClient} accent={PRIMARY} hint="в среднем на клиента" />
-        <StatTile label="Cross-sell ratio" value={fmtPct(kpi.crossSell)} delta={kpi.dCross} accent={TEAL} />
-        <StatTile label="Проникновение цифровых" value={fmtPct(kpi.digital)} delta={kpi.dDigital} accent={GOLD} />
-        <StatTile label="NPS" value={kpi.nps} delta={kpi.dNps} accent={POSITIVE} hint="индекс лояльности" />
+        <StatTile label="Активных продуктов на клиента" count={kpi.perClient} format={(n) => n.toLocaleString("ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} delta={kpi.dPerClient} accent={PRIMARY} hint="в среднем на клиента" />
+        <StatTile label="Cross-sell ratio" count={kpi.crossSell} format={(n) => fmtPct(n)} delta={kpi.dCross} accent={PURPLE} />
+        <StatTile label="Проникновение цифровых" count={kpi.digital} format={(n) => fmtPct(n)} delta={kpi.dDigital} accent={RED} />
+        <StatTile label="NPS" count={kpi.nps} format={fmtInt} delta={kpi.dNps} accent={POSITIVE} hint="индекс лояльности" />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

@@ -49,7 +49,7 @@ export default function Header() {
           ))}
         </div>
 
-        <button className="flex items-center gap-2 rounded-lg bg-bank-primary px-3.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-bank-primary-dark">
+        <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-bank-primary to-bank-purple px-3.5 py-2 text-[13px] font-medium text-white shadow-sm transition-all hover:shadow-card-hover hover:brightness-105 active:scale-95">
           <svg
             viewBox="0 0 24 24"
             fill="none"

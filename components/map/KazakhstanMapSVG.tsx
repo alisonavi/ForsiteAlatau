@@ -18,7 +18,7 @@ export type KzMapProps = {
 export default function KazakhstanMapSVG(p: KzMapProps) {
   return (
     <svg
-            className="relative w-full h-full max-h-full object-contain"
+            className="kz-map relative w-full h-full max-h-full object-contain"
             viewBox="0 0 767 440"
             preserveAspectRatio="xMidYMid meet"
             fill="none"

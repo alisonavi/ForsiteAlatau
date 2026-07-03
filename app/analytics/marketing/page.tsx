@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtTenge, fmtShort, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, catAxis, axisLabel, PALETTE, PRIMARY, GOLD, MUTED, INK, GRID, hexA } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, catAxis, axisLabel, PALETTE, PRIMARY, PURPLE, MUTED, INK, GRID, hexA, EMPHASIS, SELECTED, vGradient } from "@/lib/chart";
 import { rand, trendSeries } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -149,9 +149,12 @@ export default function MarketingPage() {
     series: [
       {
         type: "scatter",
+        cursor: "pointer",
+        selectedMode: "single",
         symbolSize: (val: number[]) => Math.max(16, Math.min(58, Math.sqrt(val[2]) / 1400)),
         label: { show: true, formatter: (p: any) => p.data.name, position: "top", fontSize: 10, color: INK },
-        emphasis: { scale: 1.1 },
+        emphasis: EMPHASIS,
+        select: SELECTED,
         itemStyle: { opacity: 0.9, borderColor: "#fff", borderWidth: 1 },
         data: channelPoints,
       },
@@ -168,7 +171,11 @@ export default function MarketingPage() {
       {
         type: "bar",
         barWidth: "52%",
+        cursor: "pointer",
+        selectedMode: "single",
         data: CHANNELS.map((ch, i) => ({ value: spendByChannel[i], itemStyle: { color: PALETTE[i], borderRadius: [4, 4, 0, 0] } })),
+        emphasis: EMPHASIS,
+        select: SELECTED,
         label: { show: true, position: "top", formatter: (p: any) => fmtShort(p.value), fontSize: 10, color: MUTED },
       },
     ],
@@ -211,10 +218,11 @@ export default function MarketingPage() {
         type: "line",
         smooth: true,
         symbolSize: 6,
+        emphasis: { focus: "series" },
         data: cacSeries,
         lineStyle: { width: 3, color: PRIMARY },
         itemStyle: { color: PRIMARY },
-        areaStyle: { color: hexA(PRIMARY, 0.08) },
+        areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) },
       },
       {
         name: "LTV",
@@ -222,9 +230,10 @@ export default function MarketingPage() {
         yAxisIndex: 1,
         smooth: true,
         symbolSize: 6,
+        emphasis: { focus: "series" },
         data: ltvSeries,
-        lineStyle: { width: 3, color: GOLD },
-        itemStyle: { color: GOLD },
+        lineStyle: { width: 3, color: PURPLE },
+        itemStyle: { color: PURPLE },
       },
     ],
   };
@@ -252,10 +261,10 @@ export default function MarketingPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="CAC (стоимость клиента)" value={fmtTenge(cac)} delta={dCac} deltaGood accent={PRIMARY} />
-        <StatTile label="LTV (ценность клиента)" value={fmtTenge(ltv)} delta={dLtv} accent={GOLD} />
+        <StatTile label="CAC (стоимость клиента)" count={cac} format={fmtTenge} delta={dCac} deltaGood accent={PRIMARY} />
+        <StatTile label="LTV (ценность клиента)" count={ltv} format={fmtTenge} delta={dLtv} accent={PURPLE} />
         <StatTile label="LTV / CAC" value={ratioLabel} delta={dRatio} accent={PALETTE[5]} hint="Норма ≥ 3x" />
-        <StatTile label="ROMI" value={fmtPct(romi, 0)} delta={dRomi} accent={PALETTE[2]} />
+        <StatTile label="ROMI" count={romi} format={(n) => fmtPct(n, 0)} delta={dRomi} accent={PALETTE[2]} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

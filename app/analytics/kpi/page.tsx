@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtInt, fmtPct, fmtSigned } from "@/lib/format";
-import { grid, tooltipBox, PALETTE, PRIMARY, TEAL, GOLD, POSITIVE, NEGATIVE, INK, MUTED, GRID, hexA } from "@/lib/chart";
+import { grid, tooltipBox, PALETTE, PRIMARY, TEAL, RED, GOLD, POSITIVE, NEGATIVE, INK, MUTED, GRID, hexA, EMPHASIS, SELECTED } from "@/lib/chart";
 import { rand, trendSeries } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -44,6 +44,10 @@ export default function KpiPage() {
         coordinateSystem: "polar",
         roundCap: true,
         barWidth: 13,
+        cursor: "pointer",
+        selectedMode: "single",
+        emphasis: EMPHASIS,
+        select: SELECTED,
         data: attain.map((v, i) => ({
           value: v,
           itemStyle: { color: perspective === "Все" || perspective === DIRS[i] ? PALETTE[i] : hexA(PALETTE[i], 0.32) },
@@ -69,6 +73,10 @@ export default function KpiPage() {
         name: "Факт",
         type: "bar",
         barWidth: 14,
+        cursor: "pointer",
+        selectedMode: "single",
+        emphasis: EMPHASIS,
+        select: SELECTED,
         data: bulletFact.map((v) => ({ value: v, itemStyle: { color: v >= 100 ? POSITIVE : v >= 85 ? GOLD : NEGATIVE, borderRadius: [0, 4, 4, 0] } })),
         label: { show: true, position: "right", formatter: (p: any) => fmtPct(p.value), fontSize: 10, color: MUTED },
         markLine: {
@@ -93,6 +101,7 @@ export default function KpiPage() {
     smooth: true,
     symbolSize: 6,
     showSymbol: false,
+    emphasis: { focus: "series" as const },
     lineStyle: { width: 3, color },
     itemStyle: { color },
     data,
@@ -103,7 +112,7 @@ export default function KpiPage() {
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
     xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
     yAxis: { type: "value", min: 50, max: 100, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => v + "%" } },
-    series: [lineSeries("Финансовые", lineFin, PRIMARY), lineSeries("Клиентские", lineCli, TEAL), lineSeries("Процессные", lineOps, GOLD)],
+    series: [lineSeries("Финансовые", lineFin, PRIMARY), lineSeries("Клиентские", lineCli, TEAL), lineSeries("Процессные", lineOps, RED)],
   };
 
   // ---- 4. 100% stacked bar: goal status per direction ----
@@ -121,6 +130,7 @@ export default function KpiPage() {
     type: "bar" as const,
     stack: "s",
     barWidth: "48%",
+    emphasis: { focus: "series" as const },
     data: status.map((s) => s[idx]),
     itemStyle: { color, borderRadius: radius },
   });
@@ -161,9 +171,9 @@ export default function KpiPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Общий индекс KPI" value={fmtPct(overallIndex)} delta={2.4} accent={PRIMARY} hint="Средневзвешенное по BSC" />
+        <StatTile label="Общий индекс KPI" count={overallIndex} format={fmtPct} delta={2.4} accent={PRIMARY} hint="Средневзвешенное по BSC" />
         <StatTile label="Выполнено целей" value={`${goalsDone}/${goalsTotal}`} delta={4.2} accent={POSITIVE} hint="Достигнутые цели периода" />
-        <StatTile label="В зоне риска" value={fmtInt(risk)} delta={-12.5} deltaGood accent={GOLD} hint="KPI ниже порога" />
+        <StatTile label="В зоне риска" count={risk} format={fmtInt} delta={-12.5} deltaGood accent={GOLD} hint="KPI ниже порога" />
         <StatTile label="Прирост к плану" value={fmtSigned(planDelta) + "%"} delta={1.8} deltaGood={planDelta >= 0} accent={TEAL} hint="Отклонение факт vs план" />
       </div>
 

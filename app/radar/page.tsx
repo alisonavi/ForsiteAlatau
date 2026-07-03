@@ -6,7 +6,7 @@ import ChartCard from "@/components/ui/ChartCard";
 import Chart from "@/components/ui/Chart";
 import { Segmented } from "@/components/ui/Controls";
 import { fmtTenge } from "@/lib/format";
-import { grid, tooltipBox, PRIMARY, TEAL, GOLD, hexA } from "@/lib/chart";
+import { grid, tooltipBox, PRIMARY, PURPLE, TEAL, GOLD, POSITIVE, MUTED, GRID, INK, EMPHASIS, SELECTED, vGradient, hexA } from "@/lib/chart";
 import { rand } from "@/lib/rng";
 
 type Scope = "all" | "retail" | "sme" | "corp";
@@ -23,10 +23,10 @@ const MID_X = 10; // рост рынка, %
 const MID_Y = 45; // относительная доля / маржинальность (индекс)
 
 const QUADRANTS = [
-  { key: "star", name: "Звёзды", color: "#16A34A", desc: "Высокий рост, высокая доля" },
+  { key: "star", name: "Звёзды", color: POSITIVE, desc: "Высокий рост, высокая доля" },
   { key: "cow", name: "Дойные коровы", color: PRIMARY, desc: "Низкий рост, высокая доля" },
   { key: "question", name: "Вопросы", color: GOLD, desc: "Высокий рост, низкая доля" },
-  { key: "dog", name: "Собаки", color: "#94A3B8", desc: "Низкий рост, низкая доля" },
+  { key: "dog", name: "Собаки", color: MUTED, desc: "Низкий рост, низкая доля" },
 ];
 
 function quadrantOf(x: number, y: number) {
@@ -66,11 +66,11 @@ export default function RadarPage() {
       name: "Рост рынка, %  →",
       nameLocation: "middle",
       nameGap: 30,
-      nameTextStyle: { color: "#64748B", fontSize: 11, fontWeight: 600 },
+      nameTextStyle: { color: MUTED, fontSize: 11, fontWeight: 600 },
       min: 0,
       max: 20,
-      splitLine: { lineStyle: { color: "#F1F4F9" } },
-      axisLabel: { color: "#94A3B8", fontSize: 10 },
+      splitLine: { lineStyle: { color: GRID } },
+      axisLabel: { color: MUTED, fontSize: 10 },
       axisLine: { show: false },
       axisTick: { show: false },
     },
@@ -79,11 +79,11 @@ export default function RadarPage() {
       name: "Относительная доля  →",
       nameLocation: "middle",
       nameGap: 30,
-      nameTextStyle: { color: "#64748B", fontSize: 11, fontWeight: 600 },
+      nameTextStyle: { color: MUTED, fontSize: 11, fontWeight: 600 },
       min: 0,
       max: 90,
-      splitLine: { lineStyle: { color: "#F1F4F9" } },
-      axisLabel: { color: "#94A3B8", fontSize: 10 },
+      splitLine: { lineStyle: { color: GRID } },
+      axisLabel: { color: MUTED, fontSize: 10 },
       axisLine: { show: false },
       axisTick: { show: false },
     },
@@ -92,6 +92,10 @@ export default function RadarPage() {
         type: "scatter",
         symbolSize: (d: number[]) => 14 + (d[2] / 140e9) * 46,
         data: products.map((p) => [p.x, p.y, p.vol, p.name, p.q.name]),
+        cursor: "pointer",
+        selectedMode: "single",
+        emphasis: EMPHASIS,
+        select: SELECTED,
         itemStyle: {
           color: (p: any) => hexA(quadrantOf(p.data[0], p.data[1]).color, 0.72),
           borderColor: "#fff",
@@ -102,12 +106,12 @@ export default function RadarPage() {
           formatter: (p: any) => p.data[3],
           position: "top",
           fontSize: 10,
-          color: "#334155",
+          color: INK,
         },
         markLine: {
           silent: true,
           symbol: "none",
-          lineStyle: { color: "#CBD5E1", type: "dashed", width: 1.5 },
+          lineStyle: { color: hexA(MUTED, 0.5), type: "dashed", width: 1.5 },
           label: { show: false },
           data: [{ xAxis: MID_X }, { yAxis: MID_Y }],
         },
@@ -115,10 +119,10 @@ export default function RadarPage() {
           silent: true,
           itemStyle: { opacity: 0.05 },
           data: [
-            [{ name: "Звёзды", coord: [MID_X, MID_Y], itemStyle: { color: "#16A34A" }, label: { position: ["6%", "6%"], color: "#16A34A", fontWeight: 700, fontSize: 11 } }, { coord: [20, 90] }],
+            [{ name: "Звёзды", coord: [MID_X, MID_Y], itemStyle: { color: POSITIVE }, label: { position: ["6%", "6%"], color: POSITIVE, fontWeight: 700, fontSize: 11 } }, { coord: [20, 90] }],
             [{ name: "Дойные коровы", coord: [0, MID_Y], itemStyle: { color: PRIMARY }, label: { position: ["6%", "6%"], color: PRIMARY, fontWeight: 700, fontSize: 11 } }, { coord: [MID_X, 90] }],
-            [{ name: "Вопросы", coord: [MID_X, 0], itemStyle: { color: GOLD }, label: { position: ["6%", "80%"], color: "#B45309", fontWeight: 700, fontSize: 11 } }, { coord: [20, MID_Y] }],
-            [{ name: "Собаки", coord: [0, 0], itemStyle: { color: "#94A3B8" }, label: { position: ["6%", "80%"], color: "#64748B", fontWeight: 700, fontSize: 11 } }, { coord: [MID_X, MID_Y] }],
+            [{ name: "Вопросы", coord: [MID_X, 0], itemStyle: { color: GOLD }, label: { position: ["6%", "80%"], color: GOLD, fontWeight: 700, fontSize: 11 } }, { coord: [20, MID_Y] }],
+            [{ name: "Собаки", coord: [0, 0], itemStyle: { color: MUTED }, label: { position: ["6%", "80%"], color: MUTED, fontWeight: 700, fontSize: 11 } }, { coord: [MID_X, MID_Y] }],
           ],
         },
       },
@@ -140,14 +144,15 @@ export default function RadarPage() {
       ],
       radius: "66%",
       center: ["50%", "48%"],
-      axisName: { color: "#64748B", fontSize: 11 },
-      splitLine: { lineStyle: { color: "#E6EAF3" } },
-      splitArea: { areaStyle: { color: ["#fff", "#F8FAFC"] } },
-      axisLine: { lineStyle: { color: "#E6EAF3" } },
+      axisName: { color: MUTED, fontSize: 11 },
+      splitLine: { lineStyle: { color: GRID } },
+      splitArea: { areaStyle: { color: ["#fff", hexA(PRIMARY, 0.04)] } },
+      axisLine: { lineStyle: { color: GRID } },
     },
     series: [
       {
         type: "radar",
+        emphasis: { focus: "series" },
         data: [
           { value: [88, 74, 66, 58, 82, 79], name: "Alatau City Bank", areaStyle: { color: hexA(PRIMARY, 0.22) }, lineStyle: { color: PRIMARY, width: 2 }, itemStyle: { color: PRIMARY } },
           { value: [70, 68, 71, 64, 75, 72], name: "Рынок (средн.)", areaStyle: { color: hexA(TEAL, 0.14) }, lineStyle: { color: TEAL, width: 2 }, itemStyle: { color: TEAL } },
@@ -164,11 +169,11 @@ export default function RadarPage() {
     grid: grid({ top: 30, right: 20 }),
     legend: { data: ["Факт", "Прогноз"], right: 0, top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => (v == null ? "—" : fmtTenge(v)) },
-    xAxis: { type: "category", data: years, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
-    yAxis: { type: "value", splitLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11, formatter: (v: number) => fmtTenge(v) } },
+    xAxis: { type: "category", data: years, boundaryGap: false, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
+    yAxis: { type: "value", splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtTenge(v) } },
     series: [
-      { name: "Факт", type: "line", smooth: true, showSymbol: false, connectNulls: false, lineStyle: { width: 3, color: PRIMARY }, areaStyle: { color: hexA(PRIMARY, 0.14) }, data: hist },
-      { name: "Прогноз", type: "line", smooth: true, showSymbol: false, connectNulls: false, lineStyle: { width: 3, color: GOLD, type: "dashed" }, data: forecast },
+      { name: "Факт", type: "line", smooth: true, showSymbol: false, connectNulls: false, emphasis: { focus: "series" }, lineStyle: { width: 3, color: PRIMARY }, areaStyle: { color: vGradient(hexA(PRIMARY, 0.28), hexA(PRIMARY, 0)) }, data: hist },
+      { name: "Прогноз", type: "line", smooth: true, showSymbol: false, connectNulls: false, emphasis: { focus: "series" }, lineStyle: { width: 3, color: PURPLE, type: "dashed" }, data: forecast },
     ],
   };
 
@@ -228,10 +233,10 @@ export default function RadarPage() {
         <ChartCard title="Рекомендации" description="Приоритеты на основе позиционирования">
           <ul className="space-y-3 pt-1">
             {[
-              { t: "Масштабировать «Звёзды»", d: "Digital-вклады и премиум-карты — наращивать долю и удержание.", c: "#16A34A" },
+              { t: "Масштабировать «Звёзды»", d: "Digital-вклады и премиум-карты — наращивать долю и удержание.", c: POSITIVE },
               { t: "Защищать «Дойных коров»", d: "Ипотека и депозиты физлиц — оптимизировать маржу.", c: PRIMARY },
               { t: "Тестировать «Вопросы»", d: "Эквайринг и торговое финансирование — точечные инвестиции.", c: GOLD },
-              { t: "Сокращать «Собак»", d: "Низкомаржинальные продукты — пересмотр или закрытие.", c: "#94A3B8" },
+              { t: "Сокращать «Собак»", d: "Низкомаржинальные продукты — пересмотр или закрытие.", c: MUTED },
             ].map((r) => (
               <li key={r.t} className="rounded-xl border border-bank-border p-3">
                 <div className="flex items-center gap-2">

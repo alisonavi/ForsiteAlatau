@@ -17,16 +17,16 @@ export function Segmented({
   size?: "sm" | "md";
 }) {
   return (
-    <div className="inline-flex rounded-lg bg-slate-100 p-0.5">
+    <div className="inline-flex rounded-lg bg-bank-primary-soft/70 p-0.5">
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "rounded-md font-medium transition-colors",
+            "rounded-md font-medium transition-all duration-200 active:scale-95",
             size === "sm" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-[13px]",
             value === o.value
-              ? "bg-white text-bank-primary shadow-sm"
+              ? "bg-white text-bank-primary shadow-sm ring-1 ring-bank-primary/15"
               : "text-bank-muted hover:text-bank-ink"
           )}
         >

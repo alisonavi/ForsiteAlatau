@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtTenge, fmtPct, fmtShort } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, axisLabel, PALETTE, PRIMARY, TEAL, GOLD, POSITIVE, MUTED, GRID, hexA } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, axisLabel, PALETTE, PRIMARY, PURPLE, TEAL, GOLD, POSITIVE, MUTED, GRID, INK, EMPHASIS, SELECTED, vGradient, hexA } from "@/lib/chart";
 import { rand, trendSeries, splitTotal } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -79,6 +79,7 @@ export default function PortfoliosPage() {
         label: { show: true, formatter: "{b}", color: "#fff", fontSize: 11 },
         itemStyle: { borderColor: "#fff", borderWidth: 2, gapWidth: 2 },
         levels: [{ itemStyle: { gapWidth: 2 } }],
+        emphasis: { focus: "self" },
         data: tree.data,
       },
     ],
@@ -106,6 +107,7 @@ export default function PortfoliosPage() {
       type: "bar",
       stack: "s",
       barWidth: "46%",
+      emphasis: { focus: "series" },
       data: stack.map((row) => row[si]),
       itemStyle: { color: SEG_COLORS[si], borderRadius: si === SEG_NAMES.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0] },
     })),
@@ -138,8 +140,8 @@ export default function PortfoliosPage() {
       { type: "value", position: "right", splitLine: { show: false }, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { ...axisLabel, formatter: (v: number) => fmtPct(v) } },
     ],
     series: [
-      { name: "Объём портфеля", type: "bar", yAxisIndex: 0, barWidth: "52%", data: combo.volume, itemStyle: { borderRadius: [4, 4, 0, 0], color: hexA(PRIMARY, 0.9) } },
-      { name: "NPL 90+", type: "line", yAxisIndex: 1, smooth: true, symbolSize: 6, data: combo.npl, lineStyle: { width: 3, color: GOLD }, itemStyle: { color: GOLD } },
+      { name: "Объём портфеля", type: "bar", yAxisIndex: 0, barWidth: "52%", cursor: "pointer", selectedMode: "single", data: combo.volume, itemStyle: { borderRadius: [4, 4, 0, 0], color: vGradient(hexA(PRIMARY, 0.9), PURPLE) }, emphasis: EMPHASIS, select: SELECTED },
+      { name: "NPL 90+", type: "line", yAxisIndex: 1, smooth: true, symbolSize: 6, emphasis: { focus: "series" }, data: combo.npl, lineStyle: { width: 3, color: GOLD }, itemStyle: { color: GOLD } },
     ],
   };
 
@@ -185,8 +187,12 @@ export default function PortfoliosPage() {
       {
         type: "sunburst",
         radius: ["18%", "92%"],
+        cursor: "pointer",
+        selectedMode: "single",
         label: { rotate: "radial", fontSize: 10, color: "#fff" },
         itemStyle: { borderColor: "#fff", borderWidth: 2 },
+        emphasis: { focus: "self", scaleSize: 8 },
+        select: { itemStyle: { borderColor: INK, borderWidth: 2, shadowBlur: 18, shadowColor: hexA(PURPLE, 0.5) } },
         data: sun,
       },
     ],
@@ -223,10 +229,10 @@ export default function PortfoliosPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Кредитный портфель" value={fmtTenge(kpi.credit)} delta={kpi.creditDelta} accent={PRIMARY} />
-        <StatTile label="Депозитный портфель" value={fmtTenge(kpi.deposit)} delta={kpi.depositDelta} accent={TEAL} />
-        <StatTile label="NPL 90+" value={fmtPct(kpi.npl)} delta={kpi.nplDelta} deltaGood accent={GOLD} hint="Просрочка свыше 90 дней" />
-        <StatTile label="Покрытие резервами" value={fmtPct(kpi.coverage)} delta={kpi.coverageDelta} accent={POSITIVE} />
+        <StatTile label="Кредитный портфель" count={kpi.credit} format={fmtTenge} delta={kpi.creditDelta} accent={PRIMARY} />
+        <StatTile label="Депозитный портфель" count={kpi.deposit} format={fmtTenge} delta={kpi.depositDelta} accent={TEAL} />
+        <StatTile label="NPL 90+" count={kpi.npl} format={fmtPct} delta={kpi.nplDelta} deltaGood accent={GOLD} hint="Просрочка свыше 90 дней" />
+        <StatTile label="Покрытие резервами" count={kpi.coverage} format={fmtPct} delta={kpi.coverageDelta} accent={POSITIVE} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-5">

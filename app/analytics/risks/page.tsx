@@ -7,7 +7,7 @@ import Chart from "@/components/ui/Chart";
 import StatTile from "@/components/ui/StatTile";
 import { Segmented, Select } from "@/components/ui/Controls";
 import { fmtTenge, fmtPct } from "@/lib/format";
-import { grid, tooltipBox, moneyAxis, PALETTE, PRIMARY, TEAL, GOLD, POSITIVE, NEGATIVE, INK, MUTED, GRID } from "@/lib/chart";
+import { grid, tooltipBox, moneyAxis, PALETTE, PRIMARY, PURPLE, TEAL, GOLD, POSITIVE, NEGATIVE, INK, MUTED, GRID, EMPHASIS, SELECTED, vGradient, hexA } from "@/lib/chart";
 import { rand, splitTotal } from "@/lib/rng";
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
@@ -54,12 +54,12 @@ export default function RisksPage() {
     series: [
       {
         type: "gauge", startAngle: 210, endAngle: -30, min: 0, max: 24, radius: "92%",
-        progress: { show: true, width: 14, itemStyle: { color: PRIMARY } },
+        progress: { show: true, width: 14, itemStyle: { color: vGradient(hexA(PRIMARY, 0.9), PURPLE) } },
         axisLine: { lineStyle: { width: 14, color: [[0.33, NEGATIVE], [0.5, GOLD], [1, POSITIVE]] } },
         pointer: { show: true, length: "60%", width: 5 },
         axisTick: { show: false },
-        splitLine: { length: 12, lineStyle: { color: "#cbd5e1" } },
-        axisLabel: { color: "#94a3b8", fontSize: 9, distance: 16 },
+        splitLine: { length: 12, lineStyle: { color: GRID } },
+        axisLabel: { color: MUTED, fontSize: 9, distance: 16 },
         anchor: { show: true, size: 10, itemStyle: { color: PRIMARY } },
         detail: { valueAnimation: true, formatter: (v: number) => fmtPct(v), color: INK, fontSize: 26, offsetCenter: [0, "46%"] },
         title: { offsetCenter: [0, "72%"], color: MUTED, fontSize: 11 },
@@ -105,7 +105,10 @@ export default function RisksPage() {
         type: "heatmap", data: heatData,
         label: { show: true, fontSize: 11, color: INK },
         itemStyle: { borderColor: "#fff", borderWidth: 2 },
-        emphasis: { itemStyle: { shadowBlur: 8 } },
+        cursor: "pointer",
+        selectedMode: "single",
+        emphasis: EMPHASIS,
+        select: SELECTED,
       },
     ],
   };
@@ -124,10 +127,11 @@ export default function RisksPage() {
     grid: grid({ top: 34, right: 18 }),
     legend: { data: segments.map((s) => s.name), top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", valueFormatter: (v: number) => fmtPct(v) },
-    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: "#EEF1F7" } }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    xAxis: { type: "category", boundaryGap: false, data: MONTHS, axisTick: { show: false }, axisLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11 } },
     yAxis: { type: "value", axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: GRID } }, axisLabel: { color: MUTED, fontSize: 11, formatter: (v: number) => fmtPct(v, 0) } },
     series: segments.map((s) => ({
       name: s.name, type: "line", smooth: true, symbolSize: 6, data: s.data,
+      emphasis: { focus: "series" },
       lineStyle: { width: 3, color: s.color }, itemStyle: { color: s.color },
     })),
   };
@@ -156,7 +160,7 @@ export default function RisksPage() {
     legend: { data: ["Стандартные", "Под наблюдением", "Проблемные"], top: 0, icon: "roundRect", textStyle: { fontSize: 11 } },
     tooltip: { ...tooltipBox, trigger: "axis", axisPointer: { type: "shadow" }, valueFormatter: (v: number) => fmtTenge(v) },
     xAxis: { ...moneyAxis },
-    yAxis: { type: "category", data: rows.map((r) => r.name), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: "#64748B", fontSize: 11 } },
+    yAxis: { type: "category", data: rows.map((r) => r.name), axisTick: { show: false }, axisLine: { show: false }, axisLabel: { color: MUTED, fontSize: 11 } },
     series: [
       { name: "Стандартные", type: "bar", stack: "risk", barWidth: "58%", itemStyle: { color: POSITIVE, borderRadius: [4, 0, 0, 4] }, emphasis: { focus: "series" }, data: rows.map((r) => r.standard) },
       { name: "Под наблюдением", type: "bar", stack: "risk", itemStyle: { color: GOLD }, emphasis: { focus: "series" }, data: rows.map((r) => r.watch) },
@@ -192,10 +196,10 @@ export default function RisksPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label="Достаточность капитала (CAR)" value={fmtPct(kpi.car)} delta={kpi.carD} accent={PRIMARY} hint="Норматив ≥ 12%" />
-        <StatTile label="NPL 90+" value={fmtPct(kpi.npl)} delta={kpi.nplD} deltaGood={kpi.nplD < 0} accent={NEGATIVE} hint="Проблемные кредиты" />
-        <StatTile label="Стоимость риска (CoR)" value={fmtPct(kpi.cor)} delta={kpi.corD} deltaGood={kpi.corD < 0} accent={GOLD} />
-        <StatTile label="LCR (ликвидность)" value={fmtPct(kpi.lcr, 0)} delta={kpi.lcrD} accent={TEAL} hint="Норматив ≥ 100%" />
+        <StatTile label="Достаточность капитала (CAR)" count={kpi.car} format={(n) => fmtPct(n)} delta={kpi.carD} accent={PRIMARY} hint="Норматив ≥ 12%" />
+        <StatTile label="NPL 90+" count={kpi.npl} format={(n) => fmtPct(n)} delta={kpi.nplD} deltaGood={kpi.nplD < 0} accent={NEGATIVE} hint="Проблемные кредиты" />
+        <StatTile label="Стоимость риска (CoR)" count={kpi.cor} format={(n) => fmtPct(n)} delta={kpi.corD} deltaGood={kpi.corD < 0} accent={GOLD} />
+        <StatTile label="LCR (ликвидность)" count={kpi.lcr} format={(n) => fmtPct(n, 0)} delta={kpi.lcrD} accent={TEAL} hint="Норматив ≥ 100%" />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
