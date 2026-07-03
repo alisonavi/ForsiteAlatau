@@ -9,12 +9,15 @@ export default function Logo({
 }) {
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-bank-primary to-bank-navy shadow-sm">
-        <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none">
-          {/* Alatau — layered mountain peaks */}
-          <path d="M4 24L12 10l4 7 3-5 5 12z" fill="#fff" fillOpacity="0.95" />
-          <path d="M4 24l6-5 4 3 5-4 7 6z" fill="#F23C50" fillOpacity="0.92" />
-        </svg>
+      <span className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 transition-transform duration-300 hover:scale-105">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo.png"
+          alt="Alatau City Bank"
+          width={36}
+          height={36}
+          className="h-full w-full object-cover"
+        />
       </span>
       {withText ? (
         <div className="leading-tight">
