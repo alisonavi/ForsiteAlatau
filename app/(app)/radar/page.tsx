@@ -180,7 +180,7 @@ export default function RadarPage() {
   return (
     <>
       <PageHeader
-        title="Форсайт-радар"
+        title="Стратегический радар"
         subtitle="Прогноз точек роста, продуктовая матрица и стратегическое позиционирование банка"
         right={
           <Segmented
